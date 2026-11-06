@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Склады Ozon Job</title>
+<meta name="description" content="Неофициальная карта складов Ozon Job в Москве и области: ставки, условия, расстояние от дома.">
+<meta name="theme-color" content="#2a78d6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Склады Ozon">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='13' r='9' fill='%232a78d6'/%3E%3Cpath d='M16 30 9 18h14z' fill='%232a78d6'/%3E%3Ccircle cx='16' cy='13' r='3.5' fill='white'/%3E%3C/svg%3E">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f3f3f1;
+    --panel: #fcfcfb;
+    --card-hover: #eef3fa;
+    --card-active: #e3edfa;
+    --border: #e4e3df;
+    --text: #0b0b0b;
+    --text-2: #52514e;
+    --text-3: #77766f;
+    --accent: #2a78d6;
+    --accent-ink: #ffffff;
+    --chip: #ecebe7;
+    --chip-ink: #2c2b28;
+    --rate: #1c5cab;
+    --note-bg: #fff3dc;
+    --note-ink: #6b4500;
+    --focus: #2a78d6;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .08), 0 6px 20px rgba(0, 0, 0, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #121211;
+      --panel: #1a1a19;
+      --card-hover: #23272d;
+      --card-active: #1f2c3d;
+      --border: #33322e;
+      --text: #f0efec;
+      --text-2: #c3c2b7;
+      --text-3: #9a998f;
+      --accent: #3987e5;
+      --chip: #2a2a27;
+      --chip-ink: #e4e3dc;
+      --rate: #86b6ef;
+      --note-bg: #3a2c12;
+      --note-ink: #f2c879;
+      --focus: #6da7ec;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 6px 20px rgba(0, 0, 0, .35);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #121211;
+    --panel: #1a1a19;
+    --card-hover: #23272d;
+    --card-active: #1f2c3d;
+    --border: #33322e;
+    --text: #f0efec;
+    --text-2: #c3c2b7;
+    --text-3: #9a998f;
+    --accent: #3987e5;
+    --chip: #2a2a27;
+    --chip-ink: #e4e3dc;
+    --rate: #86b6ef;
+    --note-bg: #3a2c12;
+    --note-ink: #f2c879;
+    --focus: #6da7ec;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 6px 20px rgba(0, 0, 0, .35);
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .app { display: grid; grid-template-columns: 400px 1fr; height: 100vh; height: 100dvh; }
+
+  /* ── панель ── */
+  .panel {
+    display: flex; flex-direction: column; min-height: 0;
+    background: var(--panel); border-right: 1px solid var(--border);
+  }
+  .head { padding: 16px 16px 8px; }
+  .title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  h1 { margin: 0; font-size: 18px; line-height: 1.25; font-weight: 650; letter-spacing: -.01em; }
+  .sub { margin: 4px 0 0; color: var(--text-3); font-size: 12px; }
+  .sheet-toggle { display: none; }
+
+  .controls { padding: 4px 16px 10px; display: grid; gap: 10px; border-bottom: 1px solid var(--border); }
+  .search {
+    width: 100%; height: 38px; padding: 0 12px;
+    border: 1px solid var(--border); border-radius: 10px; background: var(--bg);
+  }
+  .search::placeholder { color: var(--text-3); }
+  .row { display: flex; align-items: center; gap: 10px; min-height: 28px; }
+  .row label, .label { color: var(--text-2); white-space: nowrap; font-size: 13px; }
+  .row input[type="range"] { flex: 1; min-width: 0; accent-color: var(--accent); }
+  .row output { min-width: 96px; text-align: right; font-variant-numeric: tabular-nums; font-size: 13px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    border: 1px solid transparent; background: var(--chip); color: var(--chip-ink);
+    border-radius: 999px; padding: 5px 10px; font-size: 12.5px; cursor: pointer; line-height: 1.2;
+  }
+  .chip:hover { border-color: var(--border); }
+  .chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+  .chip .n { opacity: .65; margin-left: 4px; font-variant-numeric: tabular-nums; }
+
+  .btn {
+    height: 32px; padding: 0 12px; border-radius: 8px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--panel);
+  }
+  .btn:hover { background: var(--card-hover); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn.icon { width: 32px; padding: 0; }
+  .home-row { flex-wrap: wrap; row-gap: 6px; }
+  .home-info { color: var(--text-2); font-size: 13px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .sort-row { justify-content: space-between; }
+  .count { color: var(--text-2); font-size: 13px; font-variant-numeric: tabular-nums; }
+  select { height: 30px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel); padding: 0 6px; }
+
+  .list { list-style: none; margin: 0; padding: 6px 8px 16px; overflow-y: auto; flex: 1; min-height: 0; }
+  .item-btn {
+    display: grid; grid-template-columns: 12px 1fr; gap: 10px; width: 100%; text-align: left;
+    padding: 10px 8px; border: 0; border-radius: 10px; background: transparent; cursor: pointer;
+  }
+  .item-btn:hover { background: var(--card-hover); }
+  .item.active .item-btn { background: var(--card-active); }
+  .sw { width: 12px; height: 12px; margin-top: 4px; border-radius: 50%; background: var(--c); }
+  .sw.approx { background: transparent; border: 3px solid var(--c); }
+  .item-top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .item-name { font-weight: 600; overflow-wrap: anywhere; }
+  .item-rate { color: var(--rate); font-weight: 650; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .item-meta { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+  .item-addr {
+    color: var(--text-3); font-size: 12px; margin-top: 2px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .mini { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+  .mini span { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: var(--chip); color: var(--chip-ink); }
+  .mini span.boost { background: var(--accent); color: var(--accent-ink); }
+  .empty { padding: 24px 12px; color: var(--text-3); text-align: center; }
+  .foot { padding: 8px 16px 12px; border-top: 1px solid var(--border); color: var(--text-3); font-size: 11.5px; }
+
+  /* ── карта ── */
+  .map-wrap { position: relative; min-width: 0; min-height: 0; }
+  #map { position: absolute; inset: 0; background: #e9e6df; }
+  .map-msg {
+    position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center;
+    color: var(--text-2); background: var(--bg);
+  }
+  .legend {
+    position: absolute; top: 12px; right: 12px; z-index: 10;
+    background: var(--panel); color: var(--text); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 12px; box-shadow: var(--shadow); font-size: 12px; max-width: 220px;
+  }
+  .legend b { display: block; font-weight: 600; margin-bottom: 6px; }
+  .legend .scale { display: grid; grid-template-columns: 14px 1fr; gap: 4px 8px; align-items: center; }
+  .legend .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .legend .shape { display: grid; grid-template-columns: 14px 1fr; gap: 4px 8px; align-items: center; margin-top: 8px;
+    padding-top: 8px; border-top: 1px solid var(--border); color: var(--text-2); }
+  .legend .ring { width: 12px; height: 12px; border-radius: 50%; border: 3px solid #5598e7; }
+  .legend .pin { width: 12px; height: 12px; border-radius: 50%; background: #5598e7; }
+  .legend-toggle { display: none; }
+
+  /* балун Яндекс Карт */
+  .bln {
+    font: 13px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #0b0b0b; max-width: 320px;
+    white-space: normal; overflow-wrap: anywhere;
+  }
+  .bln-h { font-size: 15px; font-weight: 650; line-height: 1.3; }
+  .bln-meta { color: #52514e; }
+  .bln-rate { margin-top: 6px; font-size: 15px; font-weight: 650; color: #1c5cab; }
+  .bln-rate small { font-size: 12.5px; font-weight: 500; color: #52514e; }
+  .bln-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .bln-tags span { font-size: 11.5px; padding: 1px 8px; border-radius: 999px; background: #ecebe7; }
+  .bln-tags span.boost { background: #2a78d6; color: #fff; }
+  .bln-row { margin-top: 6px; color: #52514e; }
+  .bln-addr { margin-top: 6px; }
+  .bln-note { margin-top: 6px; padding: 6px 8px; border-radius: 8px; background: #fff3dc; color: #6b4500; font-size: 12px; }
+  .bln-links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; }
+  .bln-links a { color: #2a78d6; text-decoration: none; font-weight: 500; }
+  .bln-links a:hover { text-decoration: underline; }
+
+  /* ── телефон: карта на весь экран, список — выдвижная панель ── */
+  @media (max-width: 860px) {
+    .app { display: block; position: relative; }
+    .map-wrap { position: fixed; inset: 0; }
+    .panel {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+      height: 72vh; height: 72dvh; border-right: 0; border-top: 1px solid var(--border);
+      border-radius: 16px 16px 0 0; box-shadow: 0 -6px 24px rgba(0, 0, 0, .18);
+      transform: translateY(calc(100% - 76px)); transition: transform .25s ease;
+    }
+    .panel.open { transform: none; }
+    .panel { overflow-y: auto; overscroll-behavior: contain; }
+    .list { overflow: visible; flex: none; }
+    .head { padding: 10px 16px 8px; cursor: pointer; position: sticky; top: 0; z-index: 2; background: var(--panel); }
+    .head::before { content: ""; display: block; width: 36px; height: 4px; border-radius: 2px; background: var(--border); margin: 0 auto 8px; }
+    .sheet-toggle { display: inline-flex; }
+    .legend { top: 10px; right: 10px; padding: 8px 10px; }
+    .legend.collapsed .legend-body { display: none; }
+    .legend-toggle { display: block; border: 0; background: transparent; padding: 0; font-weight: 600; cursor: pointer; }
+    .legend:not(.collapsed) .legend-toggle { margin-bottom: 6px; }
+    .legend b.legend-title { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .panel { transition: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="panel" id="panel" aria-label="Список складов">
+    <header class="head" id="head">
+      <div class="title-row">
+        <h1>Склады Ozon Job</h1>
+        <button class="btn sheet-toggle" id="sheetToggle" type="button" aria-expanded="false" aria-controls="panel">Список</button>
+      </div>
+      <p class="sub" id="sub"></p>
+    </header>
+    <div class="controls">
+      <input class="search" id="q" type="search" placeholder="Название, адрес, город" aria-label="Поиск по названию и адресу" autocomplete="off">
+      <div class="row">
+        <label for="minRate">Ставка от</label>
+        <input id="minRate" type="range" step="10">
+        <output id="minRateOut" for="minRate"></output>
+      </div>
+      <div class="chips" id="typeChips" role="group" aria-label="Тип склада"></div>
+      <div class="chips" id="tagChips" role="group" aria-label="Условия"></div>
+      <div class="row home-row">
+        <button class="btn" id="homeBtn" type="button">Указать дом на карте</button>
+        <button class="btn" id="geoBtn" type="button" hidden>По геолокации</button>
+        <span class="home-info" id="homeInfo"></span>
+        <button class="btn icon" id="homeClear" type="button" aria-label="Убрать точку дома" hidden>✕</button>
+      </div>
+      <div class="row" id="radiusRow" hidden>
+        <label for="radius">Не дальше</label>
+        <input id="radius" type="range" min="0" max="60" step="5" value="0">
+        <output id="radiusOut" for="radius"></output>
+      </div>
+      <div class="row sort-row">
+        <span class="count" id="count" aria-live="polite"></span>
+        <select id="sort" aria-label="Сортировка">
+          <option value="rate">Сначала дороже</option>
+          <option value="rating">По рейтингу</option>
+          <option value="home" disabled>Ближе к дому</option>
+          <option value="name">По названию</option>
+        </select>
+      </div>
+    </div>
+    <ol class="list" id="list"></ol>
+    <div class="foot" id="foot"></div>
+  </aside>
+  <main class="map-wrap">
+    <div id="map" role="region" aria-label="Карта складов"></div>
+    <div class="legend" id="legend"></div>
+  </main>
+</div>
+
+<script src="data.js"></script>
+<script>
+"use strict";
+// Необязательно: ключ «JavaScript API и HTTP Геокодер» из кабинета разработчика Яндекса.
+// Карта работает и без него.
+const YANDEX_API_KEY = "";
+
+const DATA = window.OZON_JOB_DATA || { items: [] };
+const RAMP = ["#86b6ef", "#5598e7", "#2a78d6", "#1c5cab", "#104281"]; // ставка: светлее → дешевле
+const NO_RATE = "#a8a7a1";
+const nf = new Intl.NumberFormat("ru-RU");
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const norm = (s) => String(s ?? "").toLowerCase().replace(/ё/g, "е");
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch { /* приватный режим */ } },
+};
+
+const items = DATA.items
+  .filter((it) => it.lat != null && it.lon != null)
+  .map((it, i) => {
+    const tags = (it.tags || []).map((t) => (/^Тариф \+\d+%$/.test(t) ? "Повышенный тариф" : t));
+    return {
+      ...it,
+      id: i,
+      typeLabel: it.type ? it.type.charAt(0) + it.type.slice(1).toLowerCase() : "Склад",
+      ftags: [...new Set(tags)],
+      precision: (it.geo && it.geo.precision) || "approx",
+      hay: norm([it.name, it.address, it.type].join(" ")),
+    };
+  });
+const missing = DATA.items.length - items.length;
+
+// ── шкала ставки: квантили, округлённые до 50 ₽, чтобы в легенде были круглые границы ──
+const rates = items.map((it) => it.price_hour).filter(Boolean).sort((a, b) => a - b);
+const quant = (p) => rates[Math.floor(p * (rates.length - 1))];
+const cuts = [];
+for (const p of [0.3, 0.55, 0.75, 0.92]) {
+  const v = Math.round(quant(p) / 50) * 50;
+  if (rates.length && v > rates[0] && (!cuts.length || v > cuts[cuts.length - 1])) cuts.push(v);
+}
+const bucketOf = (r) => { let b = 0; while (b < cuts.length && r >= cuts[b]) b++; return b; };
+const colorOf = (it) => (it.price_hour ? RAMP[Math.round(bucketOf(it.price_hour) * (RAMP.length - 1) / Math.max(1, cuts.length))] : NO_RATE);
+items.forEach((it) => { it.color = colorOf(it); });
+
+// ── состояние ──
+const rateMin = rates.length ? Math.floor(rates[0] / 50) * 50 : 0;
+const rateMax = rates.length ? Math.ceil(quant(0.98) / 50) * 50 : 0; // выбросы не растягивают слайдер
+const state = { q: "", minRate: rateMin, types: new Set(), tags: new Set(), radius: 0, sort: "rate", activeId: null };
+let home = store.get("ozonjob.home");
+let map = null, om = null, homeMark = null, picking = false, pickCursor = null;
+
+function km(a, b) {
+  const R = 6371, rad = Math.PI / 180;
+  const dLat = (b[0] - a[0]) * rad, dLon = (b[1] - a[1]) * rad;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+const homeDist = (it) => (home ? km([home.lat, home.lon], [it.lat, it.lon]) : null);
+const fmtKm = (d) => (d < 10 ? d.toFixed(1).replace(".", ",") : Math.round(d)) + " км";
+const rateText = (it) => (it.price_hour ? `≈${nf.format(it.price_hour)} ₽/ч` : "ставка не указана");
+
+// ── шапка, фильтры ──
+function plural(n, one, few, many) {
+  const m10 = n % 10, m100 = n % 100;
+  return m10 === 1 && m100 !== 11 ? one : m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20) ? few : many;
+}
+function initHeader() {
+  const date = (DATA.scraped_at || "").split(" ")[0].split("-").reverse().join(".");
+  $("sub").textContent = `${DATA.region || "Москва и область"} · ${items.length} ${plural(items.length, "склад", "склада", "складов")}` +
+    (date ? ` · данные из приложения на ${date}` : "") + " · неофициальная карта";
+  const prec = items.reduce((acc, it) => ((acc[it.precision] = (acc[it.precision] || 0) + 1), acc), {});
+  $("foot").textContent =
+    `Координаты по адресам из приложения, геокодер OpenStreetMap: точно по дому — ${prec.house || 0}, ` +
+    `по улице — ${prec.street || 0}, примерно — ${prec.approx || 0}` + (missing ? `, без координат — ${missing}` : "") +
+    ". Кружок без заливки на карте — место примерное.";
+}
+
+function chip(label, n, pressed, onClick) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "chip";
+  b.setAttribute("aria-pressed", String(pressed));
+  b.innerHTML = `${esc(label)}<span class="n">${n}</span>`;
+  b.addEventListener("click", () => { onClick(); b.setAttribute("aria-pressed", String(b.getAttribute("aria-pressed") !== "true")); });
+  return b;
+}
+function initFilters() {
+  const typeCount = new Map(), tagCount = new Map();
+  for (const it of items) {
+    typeCount.set(it.typeLabel, (typeCount.get(it.typeLabel) || 0) + 1);
+    for (const t of it.ftags) tagCount.set(t, (tagCount.get(t) || 0) + 1);
+  }
+  for (const [t, n] of [...typeCount].sort((a, b) => b[1] - a[1])) {
+    $("typeChips").append(chip(t, n, false, () => { state.types.has(t) ? state.types.delete(t) : state.types.add(t); update(); }));
+  }
+  for (const [t, n] of [...tagCount].sort((a, b) => b[1] - a[1])) {
+    $("tagChips").append(chip(t, n, false, () => { state.tags.has(t) ? state.tags.delete(t) : state.tags.add(t); update(); }));
+  }
+  const r = $("minRate");
+  r.min = rateMin; r.max = rateMax; r.value = rateMin;
+  const showRate = () => { $("minRateOut").textContent = +r.value <= rateMin ? "любая" : `от ${nf.format(+r.value)} ₽/ч`; };
+  showRate();
+  r.addEventListener("input", () => { state.minRate = +r.value; showRate(); update(); });
+  let t = 0;
+  $("q").addEventListener("input", (e) => { clearTimeout(t); t = setTimeout(() => { state.q = norm(e.target.value.trim()); update(); }, 120); });
+  $("sort").addEventListener("change", (e) => { state.sort = e.target.value; renderList(); });
+  const rad = $("radius");
+  const showRad = () => { $("radiusOut").textContent = +rad.value ? `${rad.value} км от дома` : "без ограничения"; };
+  showRad();
+  rad.addEventListener("input", () => { state.radius = +rad.value; showRad(); update(); });
+}
+
+function visible() {
+  return items.filter((it) => {
+    if (state.q && !state.q.split(/\s+/).every((w) => it.hay.includes(w))) return false;
+    if (state.minRate > rateMin && !(it.price_hour >= state.minRate)) return false;
+    if (state.types.size && !state.types.has(it.typeLabel)) return false;
+    for (const t of state.tags) if (!it.ftags.includes(t)) return false;
+    if (home && state.radius && homeDist(it) > state.radius) return false;
+    return true;
+  });
+}
+
+// ── список ──
+function sorted(list) {
+  const by = {
+    rate: (a, b) => (b.price_hour || 0) - (a.price_hour || 0) || (b.rating || 0) - (a.rating || 0),
+    rating: (a, b) => (b.rating || 0) - (a.rating || 0) || (b.price_hour || 0) - (a.price_hour || 0),
+    home: (a, b) => homeDist(a) - homeDist(b),
+    name: (a, b) => a.name.localeCompare(b.name, "ru"),
+  }[state.sort === "home" && !home ? "rate" : state.sort];
+  return [...list].sort(by);
+}
+function miniTags(it) {
+  return (it.tags || []).map((t) => `<span${/^Тариф/.test(t) ? ' class="boost"' : ""}>${esc(t)}</span>`).join("");
+}
+function renderList() {
+  const list = sorted(visible());
+  $("count").textContent = `Показано ${list.length} из ${items.length}`;
+  if (!list.length) {
+    $("list").innerHTML = '<li class="empty">Под эти условия складов нет — ослабьте фильтры.</li>';
+    return;
+  }
+  $("list").innerHTML = list.map((it) => {
+    const d = homeDist(it);
+    const meta = [it.typeLabel, it.rating ? `★ ${String(it.rating).replace(".", ",")}` : "", d != null ? `${fmtKm(d)} от дома` : ""]
+      .filter(Boolean).join(" · ");
+    return `<li class="item${it.id === state.activeId ? " active" : ""}" data-id="${it.id}">
+      <button class="item-btn" type="button">
+        <span class="sw${it.precision === "approx" ? " approx" : ""}" style="--c:${it.color}" aria-hidden="true"></span>
+        <span>
+          <span class="item-top"><span class="item-name">${esc(it.name)}</span><span class="item-rate">${esc(rateText(it))}</span></span>
+          <span class="item-meta" style="display:block">${esc(meta)}</span>
+          <span class="item-addr">${esc(it.address)}</span>
+          ${it.tags && it.tags.length ? `<span class="mini">${miniTags(it)}</span>` : ""}
+        </span>
+      </button></li>`;
+  }).join("");
+}
+$("list").addEventListener("click", (e) => {
+  const li = e.target.closest(".item");
+  if (li) focusItem(+li.dataset.id, true);
+});
+
+// ── карта ──
+function balloon(it) {
+  const d = homeDist(it);
+  const ll = `${it.lat.toFixed(6)},${it.lon.toFixed(6)}`;
+  const from = home ? `${home.lat.toFixed(6)},${home.lon.toFixed(6)}` : "";
+  const shift = it.price_shift ? ` <small>· ≈${nf.format(it.price_shift)} ₽ за смену ${it.shift_hours || 12} ч</small>` : "";
+  const note = {
+    street: "Точка на улице: номер дома геокодер не нашёл.",
+    approx: "Место примерное: геокодер нашёл только населённый пункт. Точный адрес откройте в Яндекс Картах.",
+  }[it.precision];
+  return {
+    header: `<div class="bln"><div class="bln-h">${esc(it.name)}</div></div>`,
+    body: `<div class="bln">
+      <div class="bln-meta">${esc(it.typeLabel)}${it.rating ? ` · ★ ${String(it.rating).replace(".", ",")}` : ""}${d != null ? ` · ${fmtKm(d)} от дома по прямой` : ""}</div>
+      <div class="bln-rate">${esc(rateText(it))}${shift}</div>
+      ${it.tags && it.tags.length ? `<div class="bln-tags">${(it.tags || []).map((t) => `<span${/^Тариф/.test(t) ? ' class="boost"' : ""}>${esc(t)}</span>`).join("")}</div>` : ""}
+      <div class="bln-row">Даты: ${it.dates && it.dates.length ? esc(it.dates.join(", ")) : "в карточке не указаны"}</div>
+      <div class="bln-addr">${esc(it.address)}</div>
+      ${note ? `<div class="bln-note">${esc(note)}</div>` : ""}
+    </div>`,
+    footer: `<div class="bln"><div class="bln-links">
+      <a href="https://yandex.ru/maps/?rtext=${from}~${ll}&rtt=mt" target="_blank" rel="noopener">Маршрут на транспорте</a>
+      <a href="https://yandex.ru/maps/?rtext=${from}~${ll}&rtt=auto" target="_blank" rel="noopener">На машине</a>
+      <a href="https://yandex.ru/maps/?text=${encodeURIComponent(it.address)}" target="_blank" rel="noopener">Адрес в Яндекс Картах</a>
+    </div></div>`,
+  };
+}
+function feature(it) {
+  const b = balloon(it);
+  return {
+    type: "Feature",
+    id: it.id,
+    geometry: { type: "Point", coordinates: [it.lat, it.lon] },
+    properties: {
+      balloonContentHeader: b.header,
+      balloonContentBody: b.body,
+      balloonContentFooter: b.footer,
+      clusterCaption: `${esc(it.name)} · ${esc(rateText(it))}`,
+      hintContent: `${esc(it.name)} · ${esc(rateText(it))}`,
+    },
+    options: {
+      preset: it.precision === "approx" ? "islands#circleIcon" : "islands#dotIcon",
+      iconColor: it.color,
+    },
+  };
+}
+function refreshBalloons() {
+  if (!om) return;
+  for (const it of items) {
+    const b = balloon(it);
+    om.objects.setObjectProperties(it.id, { balloonContentHeader: b.header, balloonContentBody: b.body, balloonContentFooter: b.footer });
+  }
+}
+
+function initMap() {
+  const narrow = matchMedia("(max-width: 860px)").matches;
+  map = new ymaps.Map("map", { center: [55.75, 37.62], zoom: 9, controls: ["zoomControl", "geolocationControl"] },
+    { suppressMapOpenBlock: false, yandexMapDisablePoiInteractivity: true });
+  om = new ymaps.ObjectManager({
+    clusterize: true,
+    gridSize: 56,
+    clusterIconLayout: "default#pieChart",
+    clusterIconPieChartRadius: 17,
+    clusterIconPieChartCoreRadius: 11,
+    clusterIconPieChartStrokeWidth: 2,
+    clusterBalloonContentLayout: narrow ? "cluster#balloonCarousel" : "cluster#balloonTwoColumns",
+    clusterBalloonContentLayoutWidth: 540,
+    clusterBalloonContentLayoutHeight: 280,
+    clusterBalloonLeftColumnWidth: 180,
+    clusterHideIconOnBalloonOpen: false,
+    clusterDisableClickZoom: false,
+  });
+  om.objects.options.set({ hideIconOnBalloonOpen: false, balloonMaxWidth: 340 });
+  om.add({ type: "FeatureCollection", features: items.map(feature) });
+  map.geoObjects.add(om);
+  // карточки и подгонка масштаба обходят легенду (и выдвижную панель на телефоне)
+  const lg = $("legend").getBoundingClientRect();
+  map.margin.addArea({ top: 0, right: 0, width: Math.ceil(lg.width) + 24, height: Math.ceil(lg.height) + 24 });
+  if (narrow) map.margin.addArea({ bottom: 0, left: 0, width: "100%", height: 90 });
+  if (items.length) map.setBounds(om.getBounds(), { checkZoomRange: true, zoomMargin: narrow ? 20 : 40 });
+
+  om.objects.events.add("balloonopen", (e) => markActive(e.get("objectId")));
+  om.clusters.events.add("balloonopen", (e) => {
+    const c = om.clusters.getById(e.get("objectId"));
+    const active = c && om.clusters.state.get("activeObject");
+    if (active) markActive(active.id);
+  });
+  om.clusters.state.events.add("change", () => {
+    const active = om.clusters.state.get("activeObject");
+    if (active) markActive(active.id);
+  });
+
+  map.events.add("click", (e) => {
+    if (!picking) return;
+    const [lat, lon] = e.get("coords");
+    setHome({ lat, lon });
+    stopPicking();
+  });
+  if (home) drawHome();
+  update();
+}
+
+function markActive(id) {
+  state.activeId = id;
+  for (const li of document.querySelectorAll(".item.active")) li.classList.remove("active");
+  const li = document.querySelector(`.item[data-id="${id}"]`);
+  if (li) {
+    li.classList.add("active");
+    if (!matchMedia("(max-width: 860px)").matches) li.scrollIntoView({ block: "nearest" });
+  }
+}
+
+function focusItem(id, fromList) {
+  const it = items[id];
+  if (!it || !map) return;
+  markActive(id);
+  if (fromList && matchMedia("(max-width: 860px)").matches) setSheet(false);
+  const zoom = Math.max(map.getZoom(), 14);
+  map.setCenter([it.lat, it.lon], zoom, { duration: 300 }).then(() => {
+    const st = om.getObjectState(id);
+    if (st.isClustered) {
+      om.clusters.state.set("activeObject", om.objects.getById(id));
+      om.clusters.balloon.open(st.cluster.id);
+    } else if (st.isShown) {
+      om.objects.balloon.open(id);
+    }
+  });
+}
+
+function update() {
+  const ids = new Set(visible().map((it) => it.id));
+  if (om) om.setFilter((o) => ids.has(o.id));
+  renderList();
+}
+
+// ── дом ──
+function drawHome() {
+  if (!map || !home) return;
+  if (!homeMark) {
+    homeMark = new ymaps.Placemark([home.lat, home.lon], { iconCaption: "Дом", hintContent: "Ваша точка — можно перетащить" },
+      { preset: "islands#redHomeCircleIcon", draggable: true, zIndex: 1000 });
+    homeMark.events.add("dragend", () => {
+      const [lat, lon] = homeMark.geometry.getCoordinates();
+      setHome({ lat, lon });
+    });
+    map.geoObjects.add(homeMark);
+  } else {
+    homeMark.geometry.setCoordinates([home.lat, home.lon]);
+  }
+}
+function setHome(h) {
+  home = h;
+  store.set("ozonjob.home", h);
+  drawHome();
+  syncHomeUi();
+  refreshBalloons();
+  if (h) { state.sort = "home"; $("sort").value = "home"; }
+  update();
+}
+function syncHomeUi() {
+  $("homeBtn").textContent = home ? "Переставить дом" : "Указать дом на карте";
+  $("homeInfo").textContent = home ? `Дом: ${home.lat.toFixed(4)}, ${home.lon.toFixed(4)}` : "";
+  $("homeClear").hidden = !home;
+  $("radiusRow").hidden = !home;
+  $("sort").querySelector('option[value="home"]').disabled = !home;
+  if (!home && state.sort === "home") { state.sort = "rate"; $("sort").value = "rate"; }
+}
+function stopPicking() {
+  picking = false;
+  $("homeBtn").classList.remove("primary");
+  syncHomeUi();
+  if (pickCursor) { pickCursor.remove(); pickCursor = null; }
+}
+$("homeBtn").addEventListener("click", () => {
+  if (!map) return;
+  if (picking) { stopPicking(); return; }
+  picking = true;
+  $("homeBtn").textContent = "Кликните по карте… (отмена)";
+  $("homeBtn").classList.add("primary");
+  pickCursor = map.cursors.push("crosshair");
+  if (matchMedia("(max-width: 860px)").matches) setSheet(false);
+});
+// геолокация доступна только по HTTPS (и на localhost)
+if (navigator.geolocation && window.isSecureContext) $("geoBtn").hidden = false;
+$("geoBtn").addEventListener("click", () => {
+  const btn = $("geoBtn");
+  const done = () => { btn.disabled = false; btn.textContent = "По геолокации"; };
+  btn.disabled = true;
+  btn.textContent = "Определяю…";
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      done();
+      const { latitude: lat, longitude: lon } = pos.coords;
+      setHome({ lat, lon });
+      if (map) map.setCenter([lat, lon], Math.max(map.getZoom(), 11), { duration: 300 });
+    },
+    (err) => {
+      done();
+      $("homeInfo").textContent = err.code === 1 ? "Браузер не дал доступ к геолокации" : "Не удалось определить место";
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 },
+  );
+});
+$("homeClear").addEventListener("click", () => {
+  if (homeMark) { map.geoObjects.remove(homeMark); homeMark = null; }
+  state.radius = 0; $("radius").value = 0; $("radius").dispatchEvent(new Event("input"));
+  setHome(null);
+});
+
+// ── легенда ──
+function initLegend() {
+  const labels = [];
+  const lo = [rateMin, ...cuts], hi = [...cuts, null];
+  for (let b = 0; b < lo.length; b++) {
+    const c = RAMP[Math.round(b * (RAMP.length - 1) / Math.max(1, cuts.length))];
+    const text = hi[b] == null ? `от ${nf.format(lo[b])}` : b === 0 ? `до ${nf.format(hi[b] - 1)}` : `${nf.format(lo[b])}–${nf.format(hi[b] - 1)}`;
+    labels.push(`<span class="dot" style="background:${c}"></span><span>${text}</span>`);
+  }
+  $("legend").innerHTML = `
+    <button class="legend-toggle" type="button" aria-expanded="false">Легенда</button>
+    <div class="legend-body">
+      <b class="legend-title">Ставка, ₽/ч</b>
+      <div class="scale">${labels.join("")}</div>
+      <div class="shape">
+        <span class="pin"></span><span>найден дом или улица</span>
+        <span class="ring"></span><span>место примерное</span>
+      </div>
+    </div>`;
+  const lg = $("legend"), btn = lg.querySelector(".legend-toggle");
+  if (matchMedia("(max-width: 860px)").matches) lg.classList.add("collapsed");
+  btn.addEventListener("click", () => {
+    const collapsed = lg.classList.toggle("collapsed");
+    btn.setAttribute("aria-expanded", String(!collapsed));
+  });
+}
+
+// ── выдвижная панель на телефоне ──
+function setSheet(open) {
+  $("panel").classList.toggle("open", open);
+  $("sheetToggle").setAttribute("aria-expanded", String(open));
+  $("sheetToggle").textContent = open ? "Карта" : "Список";
+}
+$("sheetToggle").addEventListener("click", (e) => { e.stopPropagation(); setSheet(!$("panel").classList.contains("open")); });
+$("head").addEventListener("click", (e) => {
+  if (matchMedia("(max-width: 860px)").matches && !e.target.closest("button")) setSheet(!$("panel").classList.contains("open"));
+});
+
+// ── запуск ──
+initHeader();
+initFilters();
+initLegend();
+syncHomeUi();
+renderList();
+
+(function loadYmaps() {
+  const s = document.createElement("script");
+  s.src = "https://api-maps.yandex.ru/2.1/?lang=ru_RU" + (YANDEX_API_KEY ? "&apikey=" + encodeURIComponent(YANDEX_API_KEY) : "");
+  const fail = () => {
+    if (map) return;
+    const msg = document.createElement("div");
+    msg.className = "map-msg";
+    msg.textContent = "Не удалось загрузить Яндекс Карты. Проверьте интернет и обновите страницу — список слева работает и без карты.";
+    document.querySelector(".map-wrap").append(msg);
+  };
+  const timer = setTimeout(fail, 15000);
+  s.onload = () => ymaps.ready(() => { clearTimeout(timer); initMap(); });
+  s.onerror = () => { clearTimeout(timer); fail(); };
+  document.head.append(s);
+})();
+</script>
+</body>
+</html>
